@@ -2,9 +2,9 @@ from collections import defaultdict
 
 
 lines = []
-with open("inputs/day08_simple.in") as f:
+# with open("inputs/day08_simple.in") as f:
 # with open("inputs/day08_test.in") as f:
-# with open("inputs/day08.in") as f:
+with open("inputs/day08.in") as f:
     for line in f:
         lines.append([c for c in line.strip()])
 def p(lines):
@@ -80,11 +80,11 @@ for (k, v) in pairs.items():
                     is_added = True
                     unique.add(dbl_first)
                 dbl_first = (dbl_first[0] - slope_y, dbl_first[1] - slope_x)
-            if is_added:
-                unique.add(first)
-                unique.add(second)
+            unique.add(first)
+            unique.add(second)
 for u in unique:
     lines[u[0]][u[1]] = "#"
-p(lines)
+for line in lines:
+    print("".join(line))
 print(pairs)
 print(len(unique))
