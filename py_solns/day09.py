@@ -2,8 +2,8 @@ from collections import defaultdict
 
 
 line = ""
-with open("inputs/day09_test.in") as f:
-# with open("inputs/day09.in") as f:
+# with open("inputs/day09_test.in") as f:
+with open("inputs/day09.in") as f:
     line = f.readline().strip()
 def chksum(disk):
     sum = 0
@@ -48,32 +48,43 @@ def day2(line):
         for _ in range(0, int(c)):
             disk.append(char)
         free = not free
-    dmap = []
+    dmap = defaultdict(list)
     free_space = []
     free = False
+    contiguous = False
     for (i, c) in enumerate(disk):
         if c == '.':
+            if not contiguous:
+                free_space.append([])
+            free_space[-1].append(i)
+            contiguous = True
             continue
-        if len(dmap) != int(c)+1:
-            dmap.append([])
         dmap[int(c)].append(i)
-    for (i, id) in enumerate(dmap[:-1]):
-        second_id = dmap[i+1]
-        if ( second_id[0] - id[-1]<= 0):
-            print("ERR")
-            exit(1)
-        first = id[-1] + 1
-        second = second_id[0] - 1
-        space = []
-        for j in range(first, second+1):
-            space.append(j)
-        free_space.append(space)
+        contiguous = False
+    
+    for i in range(id, -1, -1):
+        l = dmap[i]
+        for space in free_space:
+            if space and space[0] > l[0]:
+                continue
+            if len(space) >= len(l):
+                for j in range(0, len(l)):
+                    dmap[i][j] = space[j]
+                del space[0:len(l)]
+                break
+            else:
+                continue
+    new_disk = ['.' for _ in disk]
+    for (k, v) in dmap.items():
+        for i in v:
+            new_disk[i] = k
     print(free_space)
-
-    print(dmap)
+    print(new_disk)
+    print(chksum(new_disk))
 
 
 
 
 day1(line)
 day2(line)
+print(chksum([int(x) if x.isdigit() else x for x in "00992111777.44.333....5555.6666.....8888.."]))
